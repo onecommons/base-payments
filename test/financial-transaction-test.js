@@ -6,6 +6,10 @@ var mongoose    = brequire('mongoose');
 var bp          = require('../lib/oc-balanced');
 var m           = require('../models');
 var bodyParser = brequire('body-parser');
+var configloader = brequire('./lib/config');
+var bpconfig = configloader(__dirname+'/..')('payments');
+bp.setConfig(bpconfig);
+var config = configloader()('app');
 
 describe('FT', function () {
 
@@ -22,7 +26,7 @@ describe('FT', function () {
 
     before(function(done) {
       mongoose.connection.close();
-      db = mongoose.connect('mongodb://localhost/ocdemo-unittest', done);
+      db = mongoose.connect(config.dburl, done);
     });
 
     after(function(done) {

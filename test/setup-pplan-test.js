@@ -6,6 +6,10 @@ var mongoose    = brequire('mongoose');
 var bp          = require('../lib/oc-balanced');
 var m           = require('../models');
 var bodyParser = brequire('body-parser');
+var configloader = brequire('./lib/config');
+var bpconfig = configloader(__dirname+'/..')('payments');
+bp.setConfig(bpconfig);
+var config = configloader()('app');
 
 describe('setup payment plan', function () {
 
@@ -21,7 +25,7 @@ describe('setup payment plan', function () {
     app.post('/setup-payment-plan', function(req, res) {assert(theUser); spp(req,res, theUser)});
 
     before(function(done) {
-      db = mongoose.connect('mongodb://localhost/ocdemo-unittest');
+      db = mongoose.connect(config.dburl);
       // clear users and add test user record
       m.User.remove({}
       ,function(){

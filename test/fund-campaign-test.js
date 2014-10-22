@@ -11,6 +11,12 @@ var swig        = brequire('swig');
 brequire('./lib/swigextensions')(swig);
 var bodyParser = brequire('body-parser');
 
+var configloader = brequire('./lib/config');
+var bpconfig = configloader(__dirname+'/..')('payments');
+bp.setConfig(bpconfig);
+var config = configloader()('app');
+
+
 DEBUG_ON = true;
 
 describe('fund campaign', function () {
@@ -35,7 +41,7 @@ describe('fund campaign', function () {
 
     before(function(done) {
       mongoose.connection.close();
-      db = mongoose.connect('mongodb://localhost/ocdemo-unittest');
+      db = mongoose.connect(config.dburl);
 
       // clear users and add test user record
       m.User.remove({}

@@ -4,6 +4,10 @@ chai.use(chaiAsPromised);
 var assert = chai.assert;
 
 var bp           = require('../lib/oc-balanced');
+var brequire    = require('base').brequire;
+var bpconfig = brequire('./lib/config')(__dirname+'/..')('payments');
+bp.setConfig(bpconfig);
+
 var httpRequest  = require('request');
 
 describe('oc-balanced api', function(){
