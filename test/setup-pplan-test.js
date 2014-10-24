@@ -75,21 +75,23 @@ describe('setup payment plan', function () {
              assert(!err);
              m.FundingInstrument.findOne({}
              ,function(err,fi){
+                assert(!err, err);
+                assert(fi);
                 assert.equal(fi.user, theUser._id);
                 assert.equal(fi.ccToken, debitparams.fundingInstrument); // fi has been created.
 
                 m.User.findOne({_id: theUser.id}
                 ,function(err,u){
                   // console.log(u);
+                  assert(!err, err)
                   assert(u);
-                  assert.equal(u.paymentPlan.fi, fi._id); // user payment plan has been updated.
 
                   m.FinancialTransaction.findOne({}
                   ,function(err, ft){
                     if(err) { throw(err) }
-                    // assert.isNotNull(ft);
+                    assert.isNotNull(ft);
                     // assert.equal(ft.status, 'succeeded');
-                    // assert.equal(ft.fi, fi._id);
+                    assert.equal(ft.fi, fi._id);
                     // assert.equal(ft.user, theUser._id); // FinancialTransaction record has been created.
                     done();
 

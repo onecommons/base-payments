@@ -195,7 +195,8 @@ module.exports.setupPaymentPlanPost = function(req, res, user) {
             // Create FI, edit user payment plan, create a success FT record, and done(); return success.
 
             var fi                   = new fim.FundingInstrument();
-            fi.user                  = data.userId;
+            fi.user                  = theUser._id;
+            fi.status   = 'verified';
             fi.ccLastFour            = data.cclastfour;
             fi.type                  = 'cc';
             fi.ccType                = data.cctype;
@@ -212,10 +213,10 @@ module.exports.setupPaymentPlanPost = function(req, res, user) {
               models.User.findOne({_id: theUser._id}
               ,function(err,uFound){
                 if(err) { throw err }
+                uFound.activeFI = fiback.id;
                 uFound.paymentPlan =  {
                         frequency: data.donationFrequency,
-                        lastCharge: now,
-                        fi: fi._id
+                        amount: data.donationAmount
                 };
 
                 uFound.save(
@@ -231,7 +232,7 @@ module.exports.setupPaymentPlanPost = function(req, res, user) {
                   ft.date = now;
                   ft.amount = bpdata.amount;
                   ft.currency = bpdata.currency;
-                  ft.transactionNumber = bpdata.transaction_number;
+                  ft.processorTransactionId = bpdata.transaction_number; 
                   ft.appearsOnStatementAs = bpdata.appears_on_statement_as;
                   ft.description  = bpdata.description;
 

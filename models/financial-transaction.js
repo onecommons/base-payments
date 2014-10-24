@@ -9,6 +9,7 @@ var fi       = require('./funding-instrument');
 // define the schema for our transaction model
 var financialTransactionSchema = mongoose.Schema({
   status                        : { type: String, enum: ['prepare', 'succeeded', 'failed'], default: 'prepare'},
+  user                          : { type: String, ref: 'User'},
   subscription                  : { type: String, ref: 'Subscription'},
   fi                            : { type: String, ref: 'FundingInstrument'},
   transactionType               : { type: String,

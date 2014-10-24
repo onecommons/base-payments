@@ -53,8 +53,10 @@ describe('FT', function () {
             theFI              = new m.FundingInstrument();
             theFI.user         = theUser._id;
             theFI.ccToken     = '/cards/CC6EdoVFsRDJbOrHvNcmq6VR' // good test card
+            theFI.ccType      = 'visa'
             theFI.save( function(err, fiback){
-              assert(!err && fiback);
+              assert(!err, err);
+              assert(fiback, "no FI doc found");
               theFI = fiback;
               theUser.activeFI = theFI._id;
               theUser.save(function(err,uback){
