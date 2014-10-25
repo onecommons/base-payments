@@ -9,8 +9,8 @@ var fundingInstrumentSchema = mongoose.Schema({
   status           : { type: String, enum: ['unverified', 'verified', 'invalid'] },
   type             : { type: String, enum: ['cc', 'ach', 'paypal'], default: 'cc'},
   ccLastFour       : { type: String, trim: true, match: /^\d{4}/ },
-  ccType           : { type: String, required: true, enum:
-                       ["amex", "discover","mastercard","visa","diners-club","jcb"]},
+  ccType           : { type: String, enum:
+                       ["amex", "discover","mastercard","visa","diners-club","jcb", '']},
   ccNameOnCard     : String,
   ccToken          : { type: String, unique: true},
   ccExpirationDate : {type: String },

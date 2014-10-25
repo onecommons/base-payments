@@ -75,6 +75,21 @@ describe('FT', function () {
       });
     }); // beforeEach()
 
+   it('should debit and create a transaction', function(done) {
+     m.FundingInstrument.findOne({},function(err, doc){
+       assert(!err, err);
+       assert(doc);
+       m.FinancialTransaction.debit(doc, 200, {}).then(function(ft) {
+         assert(ft.status == 'succeeded');
+         assert(ft.user == theUser.id);
+         done();
+       }, function(err) {
+         assert(false, 'unexpected: ' + err);
+         done();
+       });
+     });
+  });
+
     it('should do a proper debit with the given correct data', function(done){
       // confirm theFT is fully filled in.
       assert.isNotNull(theFT.fi);

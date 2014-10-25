@@ -5,13 +5,15 @@ var createSchema = brequire('./lib/createmodel').createSchema;
 var bp                      = require('../lib/oc-balanced');
 var User                    = brequire('./models/user');
 var fi       = require('./funding-instrument');
+var _ = require('underscore');
+var Promise = require('promise');
 
 // define the schema for our transaction model
 var financialTransactionSchema = mongoose.Schema({
   status                        : { type: String, enum: ['prepare', 'succeeded', 'failed'], default: 'prepare'},
-  user                          : { type: String, ref: 'User'},
+  user                          : { type: String, ref: 'User', required: true},
   subscription                  : { type: String, ref: 'Subscription'},
-  fi                            : { type: String, ref: 'FundingInstrument'},
+  fi                            : { type: String, ref: 'FundingInstrument', required: true},
   transactionType               : { type: String,
                                      enum: ['oneTimeDebit', 'subscriptionDebit', 'credit', 'refund', 'chargeBack'],
                                      default: 'subscriptionDebit'},
@@ -26,6 +28,47 @@ var financialTransactionSchema = mongoose.Schema({
   processorTransactionNumber    : String   // in BP, e.g. debits.transaction_number
 });
 
+//options.appearsOnStatementAs, options.description
+financialTransactionSchema.statics.debit = function(fundingInstrument, amount, options){
+  return new Promise(function(resolve, reject) {
+    try {
+      var ft = new module.exports.FinancialTransaction();
+      ft.fi = fundingInstrument.id;
+      ft.user = fundingInstrument.user;
+      var options = _.defaults({amount:amount}, options || {}, 
+        {appearsOnStatementAs: bp.getConfig().defaultStatementText, 
+         description:  bp.getConfig().defaultDescription});
+      ft.set(options);
+      ft.saveP().then(function(ft) {
+        bp.debitCard(fundingInstrument.ccToken, ft, function(err, bp_reply){
+          if (err || bp_reply.errors) {
+            ft.status = 'failed';
+            if (bp_reply && bp_reply.errors.length) {
+              ft.description = bp_reply.errors[0].status +
+                                 ' ' + bp_reply.errors[0].description;
+            }
+          } else {
+            ft.status = 'succeeded';
+            var bpdata = bp_reply.debits[0];
+            ft.amount = bpdata.amount;
+            ft.currency = bpdata.currency;
+            ft.processorTransactionId = bpdata.transaction_number; 
+            ft.appearsOnStatementAs = bpdata.appears_on_statement_as;
+            ft.description  = bpdata.description;      
+          }
+          ft.save();
+          resolve(ft);
+        });
+      }).catch(function(err) {
+        resolve(ft);
+      });
+    } catch (err) {
+      console.log('unexpected error in debit', err);
+      reject(err);
+    }
+  });
+}
+  
 // do an account debit using current settings of an FT. Callback is passed the
 // state of the saved FT record after the transaction is attempted or completed.
 // Call this on a FT object, either pre-populated or to be populated with the options
