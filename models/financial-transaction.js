@@ -6,7 +6,7 @@ var bp                      = require('../lib/oc-balanced');
 var User                    = brequire('./models/user');
 var fi       = require('./funding-instrument');
 var _ = require('underscore');
-var Promise = require('promise');
+var Promise = brequire('promise');
 
 // define the schema for our transaction model
 var financialTransactionSchema = mongoose.Schema({
@@ -35,9 +35,7 @@ financialTransactionSchema.statics.debit = function(fundingInstrument, amount, o
       var ft = new module.exports.FinancialTransaction();
       ft.fi = fundingInstrument.id;
       ft.user = fundingInstrument.user;
-      var options = _.defaults({amount:amount}, options || {}, 
-        {appearsOnStatementAs: bp.getConfig().defaultStatementText, 
-         description:  bp.getConfig().defaultDescription});
+      var options = _.defaults({amount:amount}, options || {});
       ft.set(options);
       ft.saveP().then(function(ft) {
         bp.debitCard(fundingInstrument.ccToken, ft, function(err, bp_reply){
