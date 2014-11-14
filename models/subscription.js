@@ -9,7 +9,7 @@ var createSchema = brequire('./lib/createmodel').createSchema;
 var subscriptionSchema = mongoose.Schema({
 
     frequency  : { type: String, enum: ['once','monthly','quarterly','yearly'], default: 'once'},
-    lastCharge : { type: String, ref: 'FinancialTransaction'},
+    lastCharge : { type: String, ref: 'Payment'},
     amount     : { type: Number, max: 1500000, min: 100},
     user       : { type: String, ref: 'User'},
     campaign   : { type: String, ref: 'Campaign'}

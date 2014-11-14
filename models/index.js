@@ -5,6 +5,7 @@ var _ = require('underscore');
 module.exports = exports = base.extendModels(
   require('./financial-transaction'),
   require('./funding-instrument'),
+  require('./payment'),
   require('./subscription'),
   require('./campaign'),
   require('./fund'))

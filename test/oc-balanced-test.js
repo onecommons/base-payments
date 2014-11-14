@@ -26,6 +26,7 @@ describe('oc-balanced api', function(){
                   "description": "dashboard blabbery" }
       }
       httpRequest.post(reqSettings, function(err, res, body){
+        //console.log('body', body);
         if(body.status_code >= 400){
           throw(err);
         }
@@ -38,7 +39,7 @@ describe('oc-balanced api', function(){
                   "appears_on_statement_as": "statement blab",
                   "description": "dashboard blabbery" },
                   function(err,data){
-                    //console.log(data.debits);
+                    //console.log(data);
                     assert.property(data,'debits');
                     assert.deepPropertyVal(data,'debits[0].status', 'succeeded');
                     done();

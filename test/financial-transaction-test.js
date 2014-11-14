@@ -61,8 +61,8 @@ describe('FT', function () {
               theUser.activeFI = theFI._id;
               theUser.save(function(err,uback){
                 theUser = uback;
-                m.FinancialTransaction.remove({}, function(){
-                    theFT             = new m.FinancialTransaction();
+                m.Payment.remove({}, function(){
+                    theFT             = new m.Payment();
                     theFT.user        = theUser._id;
                     theFT.fi          = theFI; // theUser.paymentPlan.fi;
                     theFT.amount      = theUser.paymentPlan.amount;
@@ -79,7 +79,7 @@ describe('FT', function () {
      m.FundingInstrument.findOne({},function(err, doc){
        assert(!err, err);
        assert(doc);
-       m.FinancialTransaction.debit(doc, 200, {}).then(function(ft) {
+       m.Payment.debit(doc, 200, {}).then(function(ft) {
          assert(ft.status == 'succeeded');
          assert(ft.user == theUser.id);
          done();

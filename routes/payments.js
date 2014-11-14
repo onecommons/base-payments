@@ -1,7 +1,7 @@
 // pay-balanced.js  route
 var models                    = require('../models');
 var fim       = require('../models/funding-instrument');
-var ft    = require('../models/financial-transaction');
+var ft    = require('../models/payment');
 var subscription            = require('../models/subscription');
 var campaign                = require('../models/campaign');
 var bp                      = require('../lib/oc-balanced');
@@ -115,7 +115,7 @@ module.exports.fundCampaignPost = function(req,res, user){
 
   var setupFT = function(done){
     // setup FT to define transaction.
-    locals.FT               = new ft.FinancialTransaction();
+    locals.FT               = new ft.Payment();
     locals.FT.user          = locals.theUser._id;
     locals.FT.subscription  = locals.sub;
     locals.FT.fi            = locals.fi._id;
@@ -175,7 +175,7 @@ module.exports.setupPaymentPlanPost = function(req, res, user) {
 
             // no err, but there still could be a transaction failure. If so, record it and done(); return.
             if(bp_reply.errors) {
-              var fft = new ft.FinancialTransaction();
+              var fft = new ft.Payment();
               fft.status = 'fail';
               fft.user = theUser._id;
               fft.date = now;
@@ -224,7 +224,7 @@ module.exports.setupPaymentPlanPost = function(req, res, user) {
                   if(err) { throw err }
                   // save financial transaction
                   var bpdata = bp_reply.debits[0];
-                  ft = new ft.FinancialTransaction();
+                  ft = new ft.Payment();
                   ft.status = 'succeeded';
                   ft.user = theUser._id;
                   ft.transactionType = 'subscriptionDebit'; // default value.
