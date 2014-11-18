@@ -48,7 +48,7 @@ paymentSchema.statics.debit = function(fundingInstrument, amount, options){
           resolve(ft);
         });
       }).catch(function(err) {
-        resolve(ft);
+        reject(err);
       });
     } catch (err) {
       console.log('unexpected error in debit', err);
