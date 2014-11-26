@@ -37,7 +37,6 @@ module.exports.fundCampaignGet = function(req,res,user){
  *   ccToken          - OPTIONAL - card token; if absent, assumes user has a valid FundingInstrument; if not, FAIL.
  *   ccLastFour       - OPTIONAL - card info
  *   ccNameOnCard     - OPTIONAL -
- *   ccCVV            - OPTIONAL - nnn 3 digit cvv code.
  *   ccExpirationDate - OPTIONAL - mmyy
  *   cctype           - OPTIONAL - one of ["amex", "discover","mastercard","visa","diners-club","jcb",'']
  * ------------------------------------
@@ -82,7 +81,6 @@ module.exports.fundCampaignPost = function(req,res, user){
       locals.fi.ccNameOnCard           = data.ccNameOnCard;
       locals.fi.ccToken                = data.ccToken;
       locals.fi.ccExpirationDate       = data.ccExpirationDate;
-      locals.fi.ccCVV                  = data.ccCVV;
       locals.fi.save(function(err, fiback){
         locals.fi = fiback;
         if(err || !fiback) { res.json({status: 'failed', comment: 'funding instrument creation failed'}); done(); return }

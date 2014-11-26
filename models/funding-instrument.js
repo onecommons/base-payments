@@ -14,7 +14,6 @@ var fundingInstrumentSchema = mongoose.Schema({
   ccNameOnCard     : String,
   ccToken          : { type: String, unique: true},
   ccExpirationDate : {type: String },
-  ccCVV            : String
 });
 
 // expose model and schema to our app.
