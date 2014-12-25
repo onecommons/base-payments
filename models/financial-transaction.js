@@ -2,7 +2,6 @@ var brequire    = require('base').brequire;
 var mongoose    = brequire('mongoose');
 var createSchema = brequire('./lib/createmodel').createSchema;
 var bp                      = require('../lib/oc-balanced');
-var User                    = brequire('./models/user');
 var fi       = require('./funding-instrument');
 var _ = require('underscore');
 var Promise = brequire('promise');

@@ -1,6 +1,5 @@
 var base = require('base');
 var brequire = base.brequire;
-var _ = require('underscore');
 
 module.exports = exports = base.extendModels(
   require('./financial-transaction'),
@@ -9,7 +8,6 @@ module.exports = exports = base.extendModels(
   require('./subscription'),
   require('./campaign'),
   require('./fund'))
-
 
 var userSchema = exports.schemas.User;
 userSchema.add({ 
