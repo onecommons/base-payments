@@ -16,7 +16,7 @@ userSchema.add({
     paymentPlan           : {
                           frequency  : { type: String, enum: ['once','monthly','quarterly','yearly']},
                           amount     : { type: Number, max: 1500000, min: 100},
-                          billingDate : { type: Number, max: 30, min: 1}
+                          billingDate : { type: Number, max: 28, min: 1}
                          },
 });
 
